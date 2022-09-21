@@ -1,0 +1,3 @@
+<template>
+    <h2>Edit profile</h2>
+</template>
