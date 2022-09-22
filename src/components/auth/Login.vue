@@ -4,7 +4,7 @@
             <div class="app-logo">
                 <img
                     class="mb-4"
-                    src="../../public/images/bootstrap-logo.svg"
+                    src="../../../public/images/bootstrap-logo.svg"
                     alt=""
                     width="72"
                     height="57"
@@ -174,19 +174,29 @@ export default {
         async login() {
             try {
                 const rs = await this.axios.post("/api/login", this.form);
+                localStorage.token = rs.data.token;
+                localStorage.user = JSON.stringify(rs.data.user);
+
+                //IF USER ARE EMAIL VERIFIED
+                await this.axios.get("/api/user");
+
                 this.$router.push({
                     name: "Account",
                     // params: {token: rs.data.token},
                 });
-                localStorage.token = rs.data.token;
             } catch (e) {
                 this.errors = {};
                 this.message = null;
 
                 if (e.response.data.errors)
                     this.errors = e.response.data.errors;
-                else if (e.response.data.message)
+                else if (e.response.data.message) {
                     this.message = e.response.data.message;
+
+                    //IF USER IS NOT EMAIL VERIFIED
+                    if (this.message == "Unauthenticated.")
+                        this.$router.push({ name: "SendEmail" });
+                }
             }
         },
     },

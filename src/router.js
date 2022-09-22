@@ -6,6 +6,8 @@ import ForgotPassword from "./components/auth/ForgotPassword.vue";
 import ResetPassword from "./components/auth/ResetPassword.vue";
 import EditProfile from "./components/user/EditProfile.vue";
 import ChangePassword from "./components/user/ChangePassword.vue";
+import SendEmail from "./components/auth/SendEmail.vue";
+import VerifyEmail from "./components/auth/VerifyEmail.vue";
 import Home from "./components/auth/Home.vue";
 import Profile from "./components/auth/Profile.vue";
 
@@ -53,6 +55,16 @@ const routes = [
         path: "/reset-password",
         name: "ResetPassword",
         component: ResetPassword,
+    },
+    {
+        path: "/send-email",
+        name: "SendEmail",
+        component: SendEmail,
+    },
+    {
+        path: "/verify-email",
+        name: "VerifyEmail",
+        component: VerifyEmail,
     },
 ];
 
