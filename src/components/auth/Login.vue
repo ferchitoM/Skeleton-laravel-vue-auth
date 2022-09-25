@@ -173,7 +173,6 @@ export default {
                 if (rs.data.user.email_verified_at == null)
                     this.$router.push({ name: "SendEmail" });
                 else {
-                    console.log(rs);
                     //SELECT THE USER ROLE
                     switch (rs.data.role) {
                         case "A":

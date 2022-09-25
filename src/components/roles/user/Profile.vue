@@ -15,6 +15,7 @@ export default {
         return {
             token: null,
             user: {},
+            show: true,
         };
     },
     mounted() {
@@ -32,28 +33,25 @@ export default {
     },
     methods: {
         async logout() {
+            let msg = "";
+
             try {
-                console.log(this.token);
                 const rs = await this.axios.get("/api/logout", {
                     headers: { Authorization: `Bearer ${this.token}` },
                 });
 
+                msg = rs.data.message;
                 localStorage.clear();
-
-                this.$router.push({
-                    name: "Login",
-                    params: {
-                        message: rs.data.message,
-                    },
-                });
             } catch (e) {
-                this.$router.push({
-                    name: "Login",
-                    params: {
-                        message: e.response.data.message,
-                    },
-                });
+                msg = e.response.data.message;
             }
+            //Return to login with message
+            this.$router.push({
+                name: "Login",
+                params: {
+                    message: msg,
+                },
+            });
         },
     },
 };

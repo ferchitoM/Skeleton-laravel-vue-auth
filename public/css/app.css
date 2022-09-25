@@ -7,12 +7,14 @@
 .app-container .app-navbar {
   height: 3rem;
   background-color: #171717;
+}
+.app-container .app-navbar nav {
   color: white;
   display: flex;
   justify-content: space-between;
   padding: 0.5rem;
 }
-.app-container .app-navbar h5 {
+.app-container .app-navbar nav h5 {
   margin-right: 1rem;
 }
 .app-container .app-subcontainer {
@@ -25,11 +27,21 @@
   flex-direction: column;
 }
 .app-container .app-subcontainer .app-aside {
-  flex: 15% 0 0;
+  flex: 12rem 0 0;
   display: flex;
   flex-direction: column;
   color: #4248ff;
+}
+.app-container .app-subcontainer .app-aside h1 {
   padding: 1rem;
+}
+.app-container .app-subcontainer .app-aside .link {
+  margin: 0;
+  padding: 5px 0 5px 1rem;
+}
+.app-container .app-subcontainer .app-aside .link:hover {
+  background-color: #a0a3ff;
+  color: white;
 }
 .app-container .app-subcontainer .app-main {
   flex: 1 0 0;
@@ -45,4 +57,13 @@
   margin-right: 1rem;
   cursor: ponter;
   text-decoration: none;
+}
+
+.link-selected {
+  background-color: #4248ff;
+  color: white;
+}
+
+* {
+  transition: all 500ms ease;
 }/*# sourceMappingURL=app.css.map */

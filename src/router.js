@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from "vue-router";
 //MAIN COMPONENTS
 import Home from "./components/Home.vue";
 import NavBar from "./components/NavBar.vue";
+import Empty from "./components/Empty.vue"; //Empty component
 
 //AUTH COMPONENTS
 import Login from "./components/auth/Login.vue";
@@ -19,6 +20,7 @@ import UserEditProfile from "./components/roles/user/EditProfile.vue";
 import UserChangePassword from "./components/roles/user/ChangePassword.vue";
 import UserAccount from "./components/roles/user/Account.vue";
 import UserProfile from "./components/roles/user/Profile.vue";
+import UserTest from "./components/roles/user/Test.vue";
 
 //ADMIN COMPONENTS
 import AdminAside from "./components/roles/admin/Aside.vue";
@@ -27,6 +29,7 @@ import AdminEditProfile from "./components/roles/admin/EditProfile.vue";
 import AdminChangePassword from "./components/roles/admin/ChangePassword.vue";
 import AdminAccount from "./components/roles/admin/Account.vue";
 import AdminProfile from "./components/roles/admin/Profile.vue";
+import AdminTest from "./components/roles/admin/Test.vue";
 
 const routes = [
     //AUTH ROUTES
@@ -44,12 +47,16 @@ const routes = [
         components: {
             NavBar: NavBar,
             default: Login,
+            Aside: Empty,
         },
     },
     {
         path: "/register",
         name: "Register",
-        component: Register,
+        components: {
+            NavBar: NavBar,
+            default: Register,
+        },
     },
     {
         path: "/forgot-password",
@@ -74,6 +81,10 @@ const routes = [
 
     //USER ROUTES
     {
+        path: "/user",
+        redirect: "/login",
+    },
+    {
         path: "/user/account",
         name: "UserAccount",
         components: {
@@ -94,10 +105,18 @@ const routes = [
                 path: "change-password",
                 component: UserChangePassword,
             },
+            {
+                path: "test",
+                component: UserTest,
+            },
         ],
     },
 
     //ADMIN ROUTES
+    {
+        path: "/admin",
+        redirect: "/login",
+    },
     {
         path: "/admin/account",
         name: "AdminAccount",
@@ -118,6 +137,10 @@ const routes = [
             {
                 path: "change-password",
                 component: AdminChangePassword,
+            },
+            {
+                path: "test",
+                component: AdminTest,
             },
         ],
     },
