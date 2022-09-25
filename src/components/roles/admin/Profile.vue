@@ -1,9 +1,12 @@
 <template>
-    <h1>Mi perfil</h1>
-    <p>Name: {{ user.name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Created at: {{ user.created_at }}</p>
-    <button @click="logout()">Cerrar sesión</button>
+    <div class="app-main">
+        <h1>ADMIN</h1>
+        <h2>Mi perfil</h2>
+        <p>Name: {{ user.name }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Created at: {{ user.created_at }}</p>
+        <button @click="logout()">Cerrar sesión</button>
+    </div>
 </template>
 
 <script>

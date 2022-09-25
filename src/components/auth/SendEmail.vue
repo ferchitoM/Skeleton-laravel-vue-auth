@@ -1,13 +1,19 @@
 <template lang="">
-    <h1>Correo no verificado</h1>
-    <h6>Tu cuenta no se ha verificado todavia</h6>
-    <a @click="send_email()" class="waves-effect waves-light btn"
-        >ENVIAR EMAIL DE VERIFICACIÓN</a
-    >
-    <br />
-    <p v-if="message">{{ message }}</p>
-    <br />
-    <a @click="logout()" class="waves-effect waves-light btn">logout</a>
+    <div class="app-main">
+        <h1>Correo no verificado</h1>
+        <h6>Tu cuenta no se ha verificado todavia</h6>
+        <button type="button" class="btn btn-primary">
+            <a @click="send_email()" class="waves-effect waves-light btn"
+                >ENVIAR EMAIL DE VERIFICACIÓN</a
+            >
+        </button>
+        <br />
+        <p v-if="message">{{ message }}</p>
+        <br />
+        <button type="button" class="btn btn-secondary">
+            <a @click="logout()" class="waves-effect waves-light btn">logout</a>
+        </button>
+    </div>
 </template>
 
 <script>

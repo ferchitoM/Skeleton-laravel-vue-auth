@@ -1,5 +1,5 @@
 <template>
-    <main class="form-signin w-100 m-auto">
+    <main class="form-signin w-100">
         <form>
             <div class="app-logo">
                 <img
@@ -51,31 +51,23 @@
                 >¿Olviaste tu contraseña?</router-link
             >
             <p v-if="message" class="mt-5 mb-3 text-muted">{{ message }}</p>
+            <p v-if="errors.message" class="mt-5 mb-3 text-muted">
+                {{ errors.message }}
+            </p>
         </form>
     </main>
 </template>
 
 <style scoped>
-html,
-body {
-    height: 100%;
-}
-
 .error-message {
     color: red;
     margin: 0.5rem 0 0.5rem 0;
-}
-body {
-    display: flex;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #f5f5f5;
 }
 
 .form-signin {
     max-width: 330px;
     padding: 15px;
+    margin: 0 auto;
 }
 
 .form-signin .form-floating:focus-within {
@@ -177,25 +169,45 @@ export default {
                 localStorage.token = rs.data.token;
                 localStorage.user = JSON.stringify(rs.data.user);
 
-                //IF USER ARE EMAIL VERIFIED
-                await this.axios.get("/api/user");
+                //IF EMAIL IS NOT VERIFIED
+                if (rs.data.user.email_verified_at == null)
+                    this.$router.push({ name: "SendEmail" });
+                else {
+                    console.log(rs);
+                    //SELECT THE USER ROLE
+                    switch (rs.data.role) {
+                        case "A":
+                            this.$router.push({
+                                name: "AdminAccount",
+                                // params: {token: rs.data.token},
+                            });
+                            break;
 
-                this.$router.push({
-                    name: "Account",
-                    // params: {token: rs.data.token},
-                });
+                        case "U":
+                            this.$router.push({
+                                name: "UserAccount",
+                            });
+                            break;
+                        default:
+                            this.$router.push({
+                                name: "Login",
+                                params: {
+                                    message:
+                                        "Ups! algo salión mal, por favor intentalo de nuevo.",
+                                },
+                            });
+                    }
+                }
             } catch (e) {
                 this.errors = {};
                 this.message = null;
+
+                console.log(e);
 
                 if (e.response.data.errors)
                     this.errors = e.response.data.errors;
                 else if (e.response.data.message) {
                     this.message = e.response.data.message;
-
-                    //IF USER IS NOT EMAIL VERIFIED
-                    if (this.message == "Unauthenticated.")
-                        this.$router.push({ name: "SendEmail" });
                 }
             }
         },

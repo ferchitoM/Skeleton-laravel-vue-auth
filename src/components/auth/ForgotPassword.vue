@@ -133,14 +133,14 @@ export default {
 
     methods: {
         async send_email() {
+            this.message = "Por favor espera...";
+
             try {
                 const rs = await this.axios.post("/api/forgot-password", {
                     email: this.email,
                 });
-                this.$router.push({
-                    name: "Login",
-                    params: { message: rs.data.message },
-                });
+
+                this.message = rs.data.message;
             } catch (e) {
                 this.errors = {};
                 this.message = null;

@@ -1,9 +1,11 @@
 <template lang="">
-    <h1>Verificación de Email</h1>
-    <p v-if="message">{{ message }}</p>
-    <router-link v-if="verified" class="link" to="/account"
-        >Ir a mi cuenta</router-link
-    >
+    <div class="app-main">
+        <h1>Verificación de Email</h1>
+        <p v-if="message">{{ message }}</p>
+        <router-link v-if="verified" class="link" to="/login"
+            >Ir a mi cuenta</router-link
+        >
+    </div>
 </template>
 
 <script>
