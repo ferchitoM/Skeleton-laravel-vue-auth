@@ -61,7 +61,10 @@ const routes = [
     {
         path: "/forgot-password",
         name: "ForgotPassword",
-        component: ForgotPassword,
+        components: {
+            default: ForgotPassword,
+            NavBar: UserNavBar,
+        },
     },
     {
         path: "/reset-password",
@@ -71,12 +74,18 @@ const routes = [
     {
         path: "/send-email",
         name: "SendEmail",
-        component: SendEmail,
+        components: {
+            default: SendEmail,
+            NavBar: UserNavBar,
+        },
     },
     {
         path: "/verify-email",
         name: "VerifyEmail",
-        component: VerifyEmail,
+        components: {
+            default: VerifyEmail,
+            NavBar: UserNavBar,
+        },
     },
 
     //USER ROUTES
