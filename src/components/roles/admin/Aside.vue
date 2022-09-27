@@ -22,6 +22,13 @@
             @click="select(2)"
             >Change password</router-link
         >
+        <router-link
+            class="link"
+            to="/admin/account/products"
+            :class="{ 'link-selected': options[3] }"
+            @click="select(3)"
+            >Products</router-link
+        >
     </div>
 </template>
 
@@ -29,12 +36,12 @@
 export default {
     data() {
         return {
-            options: [true, false, false],
+            options: [true, false, false, false],
         };
     },
     methods: {
         select(op) {
-            this.options = [false, false, false];
+            this.options = [false, false, false, false];
             this.options[op] = true;
         },
     },

@@ -30,6 +30,8 @@ import AdminChangePassword from "./components/roles/admin/ChangePassword.vue";
 import AdminAccount from "./components/roles/admin/Account.vue";
 import AdminProfile from "./components/roles/admin/Profile.vue";
 import AdminTest from "./components/roles/admin/Test.vue";
+//PRODUCTS
+import ProductsCrud from "./components/roles/admin/products/Crud.vue";
 
 const routes = [
     //AUTH ROUTES
@@ -150,6 +152,10 @@ const routes = [
             {
                 path: "test",
                 component: AdminTest,
+            },
+            {
+                path: "products",
+                component: ProductsCrud,
             },
         ],
     },
