@@ -1,6 +1,6 @@
 <template>
     <main class="form-signin w-100">
-        <form>
+        <form @submit.prevent="login">
             <div class="app-logo">
                 <img
                     class="mb-4"
@@ -43,7 +43,7 @@
             <button
                 @click="login"
                 class="w-100 btn btn-lg btn-primary"
-                type="button"
+                type="submit"
             >
                 Iniciar sesión
             </button>

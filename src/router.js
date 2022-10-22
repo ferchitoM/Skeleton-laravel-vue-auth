@@ -31,7 +31,7 @@ import AdminAccount from "./components/roles/admin/Account.vue";
 import AdminProfile from "./components/roles/admin/Profile.vue";
 import AdminTest from "./components/roles/admin/Test.vue";
 //PRODUCTS
-import ProductsCrud from "./components/roles/admin/products/Crud.vue";
+import ClientsCrud from "./components/roles/admin/clients/Crud.vue";
 
 const routes = [
     //AUTH ROUTES
@@ -154,8 +154,8 @@ const routes = [
                 component: AdminTest,
             },
             {
-                path: "products",
-                component: ProductsCrud,
+                path: "clients",
+                component: ClientsCrud,
             },
         ],
     },

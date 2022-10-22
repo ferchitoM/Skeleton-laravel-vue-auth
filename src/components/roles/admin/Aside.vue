@@ -24,10 +24,10 @@
         >
         <router-link
             class="link"
-            to="/admin/account/products"
+            to="/admin/account/clients"
             :class="{ 'link-selected': options[3] }"
             @click="select(3)"
-            >Products</router-link
+            >Clientes</router-link
         >
     </div>
 </template>

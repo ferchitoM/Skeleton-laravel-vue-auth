@@ -1,6 +1,6 @@
 <template>
     <main class="form-signin w-100 m-auto">
-        <form>
+        <form @submit.prevent="login">
             <h1 class="h3 mb-3 fw-normal">Registro de usuario</h1>
 
             <div class="form-floating">
@@ -63,7 +63,7 @@
             <button
                 @click="register"
                 class="w-100 btn btn-lg btn-primary"
-                type="button"
+                type="submit"
             >
                 Registrarse
             </button>
