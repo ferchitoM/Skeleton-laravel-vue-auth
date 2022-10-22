@@ -40,7 +40,7 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        <form @submit.prevent="create">
+                        <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input
@@ -90,13 +90,16 @@
                                     {{ errors.password_confirmation[0] }}
                                 </div>
                             </div>
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">
-                                    Add Client
-                                </button>
-                            </div>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="create"
+                        >
+                            Add Client
+                        </button>
                     </div>
                 </div>
             </div>
@@ -120,7 +123,7 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        <form @submit.prevent="update">
+                        <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input
@@ -143,18 +146,58 @@
                                     {{ errors.email[0] }}
                                 </div>
                             </div>
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">
-                                    Edit Client
-                                </button>
-                            </div>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="update"
+                        >
+                            Edit Client
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Edit User Modal End -->
+
+        <!-- Delete User Modal Start -->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Delete Client
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            @click="reset_form"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Deseas eliminar al cliente:</p>
+                        <p class="delete">
+                            {{ edit_client.name }} <br />
+                            {{ edit_client.email }}?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="destroy"
+                        >
+                            Delete Client
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Delete User Modal End -->
 
         <div class="container">
             <div class="row mt-4">
@@ -215,7 +258,10 @@
                                         >
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined">
+                                        <span
+                                            @click="edit(c)"
+                                            class="material-symbols-outlined"
+                                        >
                                             <span
                                                 class="material-symbols-outlined"
                                                 data-bs-toggle="modal"
@@ -246,6 +292,9 @@
 .icons {
     cursor: pointer;
 }
+.delete {
+    padding: 0 1rem 0 1rem;
+}
 </style>
 
 <script>
@@ -263,21 +312,31 @@ export default {
                 password_confirmation: "",
             },
             edit_client: {
+                id: "",
                 name: "",
                 email: "",
-                role: "",
-                password: "",
-                password_confirmation: "",
             },
+            modal: null,
+            toast: null,
             errors: {},
         };
     },
     mounted() {
         this.getClients();
+        console.log(localStorage.token);
     },
+
     methods: {
+        //Manage bootstrap modals and toast
+        prepare_elements(name) {
+            const myModal = document.getElementById(name); //Nombre del modal
+            const myAlert = document.querySelector(".toast");
+            this.modal = bootstrap.Modal.getInstance(myModal);
+            this.toast = new bootstrap.Toast(myAlert);
+        },
         //Manage errors
-        admin_errors(e) {
+        manage_error_messages(e) {
+            console.log(e);
             this.errors = {};
             if (e.response.data.errors) this.errors = e.response.data.errors;
             else if (e.response.data.message == "Unauthenticated.") {
@@ -299,16 +358,12 @@ export default {
                 this.client_list = res.data.client_list;
                 this.hay_clientes = this.client_list.length;
             } catch (e) {
-                this.admin_errors(e);
+                this.manage_error_messages(e);
             }
         },
 
         async create() {
-            const myModal = document.getElementById("addNewUserModal");
-            const modal = bootstrap.Modal.getInstance(myModal);
-            const myAlert = document.querySelector(".toast");
-            const alert = new bootstrap.Toast(myAlert);
-
+            this.prepare_elements("addNewUserModal");
             try {
                 const res = await this.axios.post(
                     "/api/clients",
@@ -323,29 +378,28 @@ export default {
                 this.reset_form();
                 this.alert = res.data.message;
 
-                modal.hide();
-                alert.show();
+                this.modal.hide();
+                this.toast.show();
             } catch (e) {
-                this.admin_erorrs(e);
+                this.manage_error_messages(e);
             }
         },
 
         edit(c) {
             this.edit_client = {
+                id: c.id,
                 name: c.name,
                 email: c.email,
             };
         },
 
         async update() {
-            const myModal = document.getElementById("editUserModal");
-            const modal = bootstrap.Modal.getInstance(myModal);
-            const myAlert = document.querySelector(".toast");
-            const alert = new bootstrap.Toast(myAlert);
+            this.prepare_elements("editUserModal");
 
             try {
+                const id = this.edit_client.id;
                 const res = await this.axios.put(
-                    "/api/clients",
+                    `/api/clients/${id}`,
                     this.edit_client,
                     {
                         headers: {
@@ -354,15 +408,35 @@ export default {
                     }
                 );
                 this.getClients();
-                this.reset_form();
                 this.alert = res.data.message;
 
-                modal.hide();
-                alert.show();
+                this.modal.hide();
+                this.toast.show();
             } catch (e) {
-                this.admin_erorrs(e);
+                this.manage_error_messages(e);
             }
         },
+
+        async destroy() {
+            this.prepare_elements("deleteUserModal");
+
+            try {
+                const id = this.edit_client.id;
+                const res = await this.axios.delete(`/api/clients/${id}`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.token,
+                    },
+                });
+                this.getClients();
+                this.alert = res.data.message;
+
+                this.modal.hide();
+                this.toast.show();
+            } catch (e) {
+                this.manage_error_messages(e);
+            }
+        },
+
         reset_form() {
             this.alert = "";
             this.new_client = {
