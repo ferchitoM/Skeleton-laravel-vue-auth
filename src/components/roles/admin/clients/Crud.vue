@@ -265,6 +265,7 @@
                         >
                             <thead>
                                 <tr>
+                                    <th>Profile</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
@@ -276,6 +277,19 @@
                                     v-for="c in client_list"
                                     :key="'client' + c.id"
                                 >
+                                    <td>
+                                        <img
+                                            v-if="c.image"
+                                            :src="c.image"
+                                            class="image-profile"
+                                        />
+                                        <span
+                                            v-if="!c.image"
+                                            class="material-symbols-outlined default-profile"
+                                        >
+                                            account_circle
+                                        </span>
+                                    </td>
                                     <td>{{ c.name }}</td>
                                     <td>{{ c.email }}</td>
                                     <td>{{ c.role }}</td>
@@ -330,6 +344,16 @@
 }
 form {
     padding: 1.5rem;
+}
+.image-profile {
+    width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.default-profile {
+    font-size: 4rem;
+    color: #ababab;
 }
 </style>
 
