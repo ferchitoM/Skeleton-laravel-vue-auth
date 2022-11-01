@@ -48,7 +48,7 @@
                                     @change="show_image"
                                     style="display: none"
                                 />
-                                <div class="preview" v-if="new_client.image">
+                                <div class="preview" v-if="new_client.preview">
                                     <span
                                         class="material-symbols-outlined clear-image"
                                         @click="clear_image"
@@ -57,11 +57,11 @@
                                     </span>
                                     <img
                                         @click="open_browser"
-                                        :src="new_client.image"
+                                        :src="new_client.preview"
                                     />
                                 </div>
                                 <span
-                                    v-if="!new_client.image"
+                                    v-if="!new_client.preview"
                                     class="material-symbols-outlined"
                                     @click="open_browser"
                                 >
@@ -347,6 +347,7 @@ export default {
                 password: "",
                 password_confirmation: "",
                 image: null,
+                preview: null,
             },
             edit_client: {
                 id: "",
@@ -402,12 +403,14 @@ export default {
         async create() {
             this.prepare_elements("addNewUserModal");
             try {
+                console.log(this.new_client);
                 const res = await this.axios.post(
                     "/api/clients",
                     this.new_client,
                     {
                         headers: {
                             Authorization: "Bearer " + localStorage.token,
+                            "Content-Type": "multipart/form-data",
                         },
                     }
                 );
@@ -491,8 +494,10 @@ export default {
         },
         show_image(e) {
             try {
+                this.new_client.image = e.target.files[0];
+                console.log(e.target.files[0]);
                 const image = URL.createObjectURL(e.target.files[0]);
-                this.new_client.image = image;
+                this.new_client.preview = image;
             } catch (error) {
                 this.new_client.image = null;
             }
