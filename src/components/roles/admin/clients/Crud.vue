@@ -346,13 +346,13 @@ form {
     padding: 1.5rem;
 }
 .image-profile {
-    width: 4rem;
-    height: 4rem;
+    width: 2rem;
+    height: 2rem;
     object-fit: cover;
     border-radius: 50%;
 }
 .default-profile {
-    font-size: 4rem;
+    font-size: 2rem;
     color: #ababab;
 }
 </style>
