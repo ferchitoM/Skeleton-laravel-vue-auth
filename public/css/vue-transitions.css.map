@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,kBAAkB;AAClB,kBAAkB,CAAC;EACf,UAAU,EAAE,qBAAqB;CAAG;;AAExC,AAAA,gBAAgB;AAChB,cAAc,CAAC;EACX,OAAO,EAAE,CAAC;CAAG;;AAEjB,AAAA,sBAAsB;AACtB,sBAAsB,CAAC;EACnB,UAAU,EAAE,iBAAiB;CAAG;;AAEpC,AAAA,oBAAoB;AACpB,kBAAkB,CAAC;EACf,OAAO,EAAE,CAAC;EACV,SAAS,EAAE,gBAAgB;CAAG",
-    "sources": [
-        "vue-transitions.sass"
-    ],
-    "names": [],
-    "file": "vue-transitions.css"
-}
+{"version":3,"sources":["vue-transitions.sass","vue-transitions.css"],"names":[],"mappings":"AAAA;;EAEI,iCAAA;ACCJ;;ADCA;;EAEI,UAAA;ACEJ;;ADAA;;EAEI,6BAAA;ACGJ;;ADDA;;EAEI,UAAA;EACA,2BAAA;ACIJ","file":"vue-transitions.css"}

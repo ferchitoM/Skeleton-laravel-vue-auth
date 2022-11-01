@@ -1,7 +1,7 @@
 <template>
     <div class="app-main">
         <!-- Toast -->
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast-container position-fixed bottom-0 p-3">
             <div
                 id="liveToast"
                 class="toast text-bg-success border-0"
@@ -40,6 +40,36 @@
                         ></button>
                     </div>
                     <div class="modal-body">
+                        <section class="photo-container">
+                            <div class="photo-prev">
+                                <input
+                                    type="file"
+                                    id="new-client-input"
+                                    @change="show_image"
+                                    style="display: none"
+                                />
+                                <div class="preview" v-if="new_client.image">
+                                    <span
+                                        class="material-symbols-outlined clear-image"
+                                        @click="clear_image"
+                                    >
+                                        close
+                                    </span>
+                                    <img
+                                        @click="open_browser"
+                                        :src="new_client.image"
+                                    />
+                                </div>
+                                <span
+                                    v-if="!new_client.image"
+                                    class="material-symbols-outlined"
+                                    @click="open_browser"
+                                >
+                                    account_circle
+                                </span>
+                                <span>Your profile photo</span>
+                            </div>
+                        </section>
                         <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -216,7 +246,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#addNewUserModal"
                         >
-                            Add New Product
+                            Add New Client
                         </button>
                     </div>
                 </div>
@@ -295,6 +325,12 @@
 .delete {
     padding: 0 1rem 0 1rem;
 }
+.toast-container {
+    position: relative;
+}
+form {
+    padding: 1.5rem;
+}
 </style>
 
 <script>
@@ -310,6 +346,7 @@ export default {
                 role: "",
                 password: "",
                 password_confirmation: "",
+                image: null,
             },
             edit_client: {
                 id: "",
@@ -446,6 +483,22 @@ export default {
                 password: "",
                 password_confirmation: "",
             };
+        },
+
+        open_browser() {
+            const input = document.getElementById("new-client-input");
+            input.click();
+        },
+        show_image(e) {
+            try {
+                const image = URL.createObjectURL(e.target.files[0]);
+                this.new_client.image = image;
+            } catch (error) {
+                this.new_client.image = null;
+            }
+        },
+        clear_image() {
+            this.new_client.image = null;
         },
     },
 };
