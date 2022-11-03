@@ -48,22 +48,24 @@
                                     @change="show_image"
                                     style="display: none"
                                 />
-                                <div class="preview" v-if="new_client.preview">
+                                <div class="preview" v-if="client.preview">
                                     <span
                                         class="material-symbols-outlined clear-image"
-                                        @click="clear_image"
+                                        @click="clear_image('new-client-input')"
                                     >
                                         close
                                     </span>
                                     <img
-                                        @click="open_browser"
-                                        :src="new_client.preview"
+                                        @click="
+                                            open_browser('new-client-input')
+                                        "
+                                        :src="client.preview"
                                     />
                                 </div>
                                 <span
-                                    v-if="!new_client.preview"
+                                    v-if="!client.preview"
                                     class="material-symbols-outlined"
-                                    @click="open_browser"
+                                    @click="open_browser('new-client-input')"
                                 >
                                     account_circle
                                 </span>
@@ -76,7 +78,7 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    v-model="new_client.name"
+                                    v-model="client.name"
                                 />
                                 <div class="form-text" v-if="errors.name">
                                     {{ errors.name[0] }}
@@ -87,7 +89,7 @@
                                 <input
                                     type="email"
                                     class="form-control"
-                                    v-model="new_client.email"
+                                    v-model="client.email"
                                 />
                                 <div class="form-text" v-if="errors.email">
                                     {{ errors.email[0] }}
@@ -98,7 +100,7 @@
                                 <input
                                     type="password"
                                     class="form-control"
-                                    v-model="new_client.password"
+                                    v-model="client.password"
                                 />
                                 <div class="form-text" v-if="errors.password">
                                     {{ errors.password[0] }}
@@ -111,7 +113,7 @@
                                 <input
                                     type="password"
                                     class="form-control"
-                                    v-model="new_client.password_confirmation"
+                                    v-model="client.password_confirmation"
                                 />
                                 <div
                                     class="form-text"
@@ -149,17 +151,53 @@
                             class="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                            @click="reset_form"
                         ></button>
                     </div>
                     <div class="modal-body">
+                        <section class="photo-container">
+                            <div class="photo-prev">
+                                <input
+                                    type="file"
+                                    id="edit-client-input"
+                                    @change="show_image"
+                                    style="display: none"
+                                />
+                                <div class="preview" v-if="client.preview">
+                                    <span
+                                        class="material-symbols-outlined clear-image"
+                                        @click="
+                                            clear_image('edit-client-input')
+                                        "
+                                    >
+                                        close
+                                    </span>
+                                    <img
+                                        @click="
+                                            open_browser('edit-client-input')
+                                        "
+                                        :src="client.preview"
+                                    />
+                                </div>
+                                <span
+                                    v-if="!client.preview"
+                                    class="material-symbols-outlined"
+                                    @click="open_browser('edit-client-input')"
+                                >
+                                    account_circle
+                                </span>
+                                <span>Your profile photo</span>
+                            </div>
+                            <div class="form-text" v-if="errors.image">
+                                {{ errors.image[0] }}
+                            </div>
+                        </section>
                         <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input
                                     type="text"
                                     class="form-control"
-                                    v-model="edit_client.name"
+                                    v-model="client.name"
                                 />
                                 <div class="form-text" v-if="errors.name">
                                     {{ errors.name[0] }}
@@ -170,7 +208,7 @@
                                 <input
                                     type="email"
                                     class="form-control"
-                                    v-model="edit_client.email"
+                                    v-model="client.email"
                                 />
                                 <div class="form-text" v-if="errors.email">
                                     {{ errors.email[0] }}
@@ -211,8 +249,8 @@
                     <div class="modal-body">
                         <p>¿Deseas eliminar al cliente:</p>
                         <p class="delete">
-                            {{ edit_client.name }} <br />
-                            {{ edit_client.email }}?
+                            {{ client.name }} <br />
+                            {{ client.email }}?
                         </p>
                     </div>
                     <div class="modal-footer">
@@ -280,7 +318,9 @@
                                     <td>
                                         <img
                                             v-if="c.image"
-                                            :src="c.image"
+                                            :src="
+                                                axios.defaults.baseURL + c.image
+                                            "
                                             class="image-profile"
                                         />
                                         <span
@@ -302,17 +342,13 @@
                                         >
                                             edit_note
                                         </span>
+
                                         <span
-                                            @click="edit(c)"
                                             class="material-symbols-outlined"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteUserModal"
                                         >
-                                            <span
-                                                class="material-symbols-outlined"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteUserModal"
-                                            >
-                                                delete
-                                            </span>
+                                            delete
                                         </span>
                                     </td>
                                 </tr>
@@ -364,7 +400,8 @@ export default {
             client_list: [],
             hay_clientes: 0,
             alert: "",
-            new_client: {
+            client: {
+                id: null,
                 name: "",
                 email: "",
                 role: "",
@@ -372,11 +409,6 @@ export default {
                 password_confirmation: "",
                 image: null,
                 preview: null,
-            },
-            edit_client: {
-                id: "",
-                name: "",
-                email: "",
             },
             modal: null,
             toast: null,
@@ -386,6 +418,7 @@ export default {
     mounted() {
         this.getClients();
         console.log(localStorage.token);
+        console.log(this.axios.defaults.baseURL);
     },
 
     methods: {
@@ -427,17 +460,12 @@ export default {
         async create() {
             this.prepare_elements("addNewUserModal");
             try {
-                console.log(this.new_client);
-                const res = await this.axios.post(
-                    "/api/clients",
-                    this.new_client,
-                    {
-                        headers: {
-                            Authorization: "Bearer " + localStorage.token,
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
-                );
+                const res = await this.axios.post("/api/clients", this.client, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.token,
+                        "Content-Type": "multipart/form-data", //Permite enviar imágenes
+                    },
+                });
                 this.getClients();
                 this.reset_form();
                 this.alert = res.data.message;
@@ -450,24 +478,26 @@ export default {
         },
 
         edit(c) {
-            this.edit_client = {
-                id: c.id,
-                name: c.name,
-                email: c.email,
-            };
+            this.client = c;
+            this.client.preview = this.client.image
+                ? this.axios.defaults.baseURL + this.client.image
+                : null;
         },
 
         async update() {
             this.prepare_elements("editUserModal");
-
+            console.log(this.client);
+            //Verify image
+            //if (this.client.image)
             try {
-                const id = this.edit_client.id;
-                const res = await this.axios.put(
-                    `/api/clients/${id}`,
-                    this.edit_client,
+                const id = this.client.id;
+                const res = await this.axios.post(
+                    `/api/clients/update/${id}`,
+                    this.client,
                     {
                         headers: {
                             Authorization: "Bearer " + localStorage.token,
+                            "Content-Type": "multipart/form-data", //Permite enviar imágenes
                         },
                     }
                 );
@@ -485,7 +515,7 @@ export default {
             this.prepare_elements("deleteUserModal");
 
             try {
-                const id = this.edit_client.id;
+                const id = this.client.id;
                 const res = await this.axios.delete(`/api/clients/${id}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.token,
@@ -503,31 +533,38 @@ export default {
 
         reset_form() {
             this.alert = "";
-            this.new_client = {
+            this.client = {
                 name: "",
                 email: "",
                 role: "",
                 password: "",
                 password_confirmation: "",
+                image: null,
+                preview: null,
             };
         },
 
-        open_browser() {
-            const input = document.getElementById("new-client-input");
+        open_browser(input_name) {
+            const input = document.getElementById(input_name);
             input.click();
         },
         show_image(e) {
             try {
-                this.new_client.image = e.target.files[0];
+                this.client.image = e.target.files[0];
                 console.log(e.target.files[0]);
                 const image = URL.createObjectURL(e.target.files[0]);
-                this.new_client.preview = image;
-            } catch (error) {
-                this.new_client.image = null;
+                this.client.preview = image;
+                this.client.image_updated = true;
+            } catch (e) {
+                this.client.image = null;
+                console.log(e);
             }
         },
-        clear_image() {
-            this.new_client.image = null;
+        clear_image(input_name) {
+            this.client.image = null;
+            this.client.preview = null;
+            this.client.image_updated = false;
+            document.getElementById(input_name).value = null; //clear input file
         },
     },
 };

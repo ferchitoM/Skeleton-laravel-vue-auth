@@ -77,7 +77,8 @@
 
 .photo-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 .photo-container .photo-prev {
   display: flex;
@@ -109,6 +110,7 @@
 .photo-container .photo-prev .preview .clear-image {
   position: absolute;
   right: -1rem;
+  top: -0.5rem;
   opacity: 0;
   width: 2rem;
   font-size: 1.3rem;
