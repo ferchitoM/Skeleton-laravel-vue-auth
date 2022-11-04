@@ -179,13 +179,16 @@
                                     />
                                 </div>
                                 <span
-                                    v-if="!client.preview"
+                                    v-if="!client.preview && !loading_image"
                                     class="material-symbols-outlined"
                                     @click="open_browser('edit-client-input')"
                                 >
                                     account_circle
                                 </span>
-                                <span>Your profile photo</span>
+                                <div v-if="loading_image" class="loading"></div>
+                                <span class="image_text"
+                                    >Your profile photo</span
+                                >
                             </div>
                             <div class="form-text" v-if="errors.image">
                                 {{ errors.image[0] }}
@@ -283,6 +286,7 @@
                             type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#addNewUserModal"
+                            @click="reset_form"
                         >
                             Add New Client
                         </button>
@@ -413,6 +417,7 @@ export default {
             modal: null,
             toast: null,
             errors: {},
+            loading_image: false,
         };
     },
     mounted() {
@@ -547,6 +552,7 @@ export default {
         open_browser(input_name) {
             const input = document.getElementById(input_name);
             input.click();
+            this.loading_image = true;
         },
         show_image(e) {
             try {
@@ -555,6 +561,7 @@ export default {
                 const image = URL.createObjectURL(e.target.files[0]);
                 this.client.preview = image;
                 this.client.image_updated = true;
+                this.loading_image = false;
             } catch (e) {
                 this.client.image = null;
                 console.log(e);

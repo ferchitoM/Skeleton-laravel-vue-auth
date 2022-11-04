@@ -71,10 +71,15 @@
     flex-direction: column
     align-items: center
     .photo-prev
+        position: relative
         display: flex
         flex-direction: column
+        align-items: center
+        justify-content: center
+        width: 15rem
+        height: 16rem
         .preview
-            margin-top: 1rem
+            margin-top: -0.5rem
             position: relative
             img
                 margin-top: 0.5rem
@@ -114,6 +119,7 @@
             text-align: center
 
         .material-symbols-outlined
+            margin-top: -1rem
             font-size: 15rem
             font-weight: 200
             color: #9e9e9e
@@ -121,3 +127,23 @@
             transition: all 1s ease
             &:hover
                 transform: scale(1.2)
+        .image_text
+            position: absolute
+            bottom: 0
+        .loading
+            border: 16px solid #f3f3f3
+            border-radius: 50%
+            border-top: 16px solid #b6b6b6
+            width: 8rem
+            height: 8rem
+            animation: spin 1s linear infinite
+
+@keyframes spin
+    0%
+        transform: rotate(0deg)
+        border-top: 16px solid #b6b6b6
+    50%
+        border-top: 16px solid #737373
+    100%
+        transform: rotate(360deg)
+        border-top: 16px solid #b6b6b6
