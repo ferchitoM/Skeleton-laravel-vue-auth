@@ -24,7 +24,12 @@
         </div>
 
         <!-- Add New User Modal Start -->
-        <div class="modal fade" id="addNewUserModal" tabindex="-1">
+        <div
+            class="modal fade"
+            id="addNewUserModal"
+            tabindex="-1"
+            data-bs-backdrop="static"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -139,7 +144,12 @@
         <!-- Add New User Modal End -->
 
         <!-- Edit User Modal Start -->
-        <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div
+            class="modal fade"
+            id="editUserModal"
+            tabindex="-1"
+            data-bs-backdrop="static"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -151,8 +161,10 @@
                             class="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            @click="cancel_form()"
                         ></button>
                     </div>
+
                     <div class="modal-body">
                         <section class="photo-container">
                             <div class="photo-prev">
@@ -162,7 +174,10 @@
                                     @change="show_image"
                                     style="display: none"
                                 />
-                                <div class="preview" v-if="client.preview">
+                                <div
+                                    class="preview"
+                                    v-if="client.preview && !loading_image"
+                                >
                                     <span
                                         class="material-symbols-outlined clear-image"
                                         @click="
@@ -186,9 +201,7 @@
                                     account_circle
                                 </span>
                                 <!-- <div v-if="loading_image" class="loading"></div> -->
-                                <svg v-if="loading_image" class="loading">
-                                    <circle />
-                                </svg>
+                                <div v-if="loading_image" class="loading"></div>
                                 <span class="image_text"
                                     >Your profile photo</span
                                 >
@@ -237,7 +250,12 @@
         <!-- Edit User Modal End -->
 
         <!-- Delete User Modal Start -->
-        <div class="modal fade" id="deleteUserModal" tabindex="-1">
+        <div
+            class="modal fade"
+            id="deleteUserModal"
+            tabindex="-1"
+            data-bs-backdrop="static"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -324,10 +342,15 @@
                                 >
                                     <td>
                                         <img
-                                            v-if="c.image"
+                                            v-if="c.image && !c.image_updated"
                                             :src="
                                                 axios.defaults.baseURL + c.image
                                             "
+                                            class="image-profile"
+                                        />
+                                        <img
+                                            v-if="c.image_updated"
+                                            :src="c.preview"
                                             class="image-profile"
                                         />
                                         <span
@@ -417,6 +440,7 @@ export default {
                 image: null,
                 preview: null,
             },
+            client_copy: {},
             modal: null,
             toast: null,
             errors: {},
@@ -426,7 +450,6 @@ export default {
     mounted() {
         this.getClients();
         console.log(localStorage.token);
-        console.log(this.axios.defaults.baseURL);
     },
 
     methods: {
@@ -490,6 +513,7 @@ export default {
             this.client.preview = this.client.image
                 ? this.axios.defaults.baseURL + this.client.image
                 : null;
+            this.client_copy = Object.assign({}, this.client);
         },
 
         async update() {
@@ -551,6 +575,9 @@ export default {
                 preview: null,
             };
         },
+        cancel_form() {
+            Object.assign(this.client, this.client_copy);
+        },
 
         open_browser(input_name) {
             const input = document.getElementById(input_name);
@@ -565,6 +592,7 @@ export default {
                 this.client.preview = image;
                 this.client.image_updated = true;
                 this.loading_image = false;
+                console.log("xxx");
             } catch (e) {
                 this.client.image = null;
                 console.log(e);

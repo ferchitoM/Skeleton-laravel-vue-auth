@@ -115,7 +115,7 @@
 .photo-container .photo-prev .preview .clear-image {
   position: absolute;
   right: -1rem;
-  top: -0.5rem;
+  top: 0.5rem;
   opacity: 0;
   width: 2rem;
   font-size: 1.3rem;
@@ -150,31 +150,20 @@
   bottom: 0;
 }
 .photo-container .photo-prev .loading {
+  position: absolute;
+  border: 12px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 12px solid #b6b6b6;
+  border-bottom: 12px solid #b6b6b6;
   width: 8rem;
   height: 8rem;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-}
-.photo-container .photo-prev .loading circle {
-  -webkit-animation: spin 1s linear infinite;
-          animation: spin 1s linear infinite;
-  stroke-dasharray: 100px;
-  stroke-width: 12px;
-  r: 3.5rem;
-  cx: 50%;
-  cy: 50%;
-  stroke: #b4b4b4;
-  fill: none;
-  transform: translate(-50%, -50%);
+  -webkit-animation: spin 0.5s linear infinite;
+          animation: spin 0.5s linear infinite;
 }
 
 @-webkit-keyframes spin {
   0% {
     transform: rotate(0deg);
-  }
-  50% {
-    stroke-dasharray: 10px;
   }
   100% {
     transform: rotate(360deg);
@@ -184,9 +173,6 @@
 @keyframes spin {
   0% {
     transform: rotate(0deg);
-  }
-  50% {
-    stroke-dasharray: 10px;
   }
   100% {
     transform: rotate(360deg);
