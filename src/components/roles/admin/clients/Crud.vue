@@ -185,7 +185,10 @@
                                 >
                                     account_circle
                                 </span>
-                                <div v-if="loading_image" class="loading"></div>
+                                <!-- <div v-if="loading_image" class="loading"></div> -->
+                                <svg v-if="loading_image" class="loading">
+                                    <circle />
+                                </svg>
                                 <span class="image_text"
                                     >Your profile photo</span
                                 >
