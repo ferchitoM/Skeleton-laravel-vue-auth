@@ -176,7 +176,10 @@
                                 />
                                 <div
                                     class="preview"
-                                    v-if="client.preview && !loading_image"
+                                    v-if="
+                                        client.preview != null &&
+                                        client.preview != 'loading'
+                                    "
                                 >
                                     <span
                                         class="material-symbols-outlined clear-image"
@@ -188,20 +191,37 @@
                                     </span>
                                     <img
                                         @click="
-                                            open_browser('edit-client-input')
+                                            open_browser(
+                                                client,
+                                                'edit-client-input'
+                                            )
                                         "
                                         :src="client.preview"
                                     />
                                 </div>
                                 <span
-                                    v-if="!client.preview && !loading_image"
+                                    v-if="client.image == null"
                                     class="material-symbols-outlined"
-                                    @click="open_browser('edit-client-input')"
+                                    @click="
+                                        open_browser(
+                                            client,
+                                            'edit-client-input'
+                                        )
+                                    "
                                 >
                                     account_circle
                                 </span>
                                 <!-- <div v-if="loading_image" class="loading"></div> -->
-                                <div v-if="loading_image" class="loading"></div>
+                                <div
+                                    v-if="client.preview == 'loading'"
+                                    class="loading"
+                                    @click="
+                                        open_browser(
+                                            client,
+                                            'edit-client-input'
+                                        )
+                                    "
+                                ></div>
                                 <span class="image_text"
                                     >Your profile photo</span
                                 >
@@ -342,19 +362,15 @@
                                 >
                                     <td>
                                         <img
-                                            v-if="c.image && !c.image_updated"
+                                            v-if="c.image != null"
                                             :src="
                                                 axios.defaults.baseURL + c.image
                                             "
                                             class="image-profile"
                                         />
-                                        <img
-                                            v-if="c.image_updated"
-                                            :src="c.preview"
-                                            class="image-profile"
-                                        />
+
                                         <span
-                                            v-if="!c.image"
+                                            v-if="c.image == null"
                                             class="material-symbols-outlined default-profile"
                                         >
                                             account_circle
@@ -444,7 +460,6 @@ export default {
             modal: null,
             toast: null,
             errors: {},
-            loading_image: false,
         };
     },
     mounted() {
@@ -577,12 +592,14 @@ export default {
         },
         cancel_form() {
             Object.assign(this.client, this.client_copy);
+            this.loading_image = false;
+            this.image_updated = false;
         },
 
-        open_browser(input_name) {
+        open_browser(client, input_name) {
             const input = document.getElementById(input_name);
             input.click();
-            this.loading_image = true;
+            client.preview = "loading";
         },
         show_image(e) {
             try {
@@ -590,18 +607,13 @@ export default {
                 console.log(e.target.files[0]);
                 const image = URL.createObjectURL(e.target.files[0]);
                 this.client.preview = image;
-                this.client.image_updated = true;
-                this.loading_image = false;
-                console.log("xxx");
             } catch (e) {
-                this.client.image = null;
-                console.log(e);
+                this.client.image = this.client_copy.image;
+                this.cliente.preview = this.cliente.image;
             }
         },
         clear_image(input_name) {
             this.client.image = null;
-            this.client.preview = null;
-            this.client.image_updated = false;
             document.getElementById(input_name).value = null; //clear input file
         },
     },
