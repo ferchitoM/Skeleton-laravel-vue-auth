@@ -200,7 +200,10 @@
                                     />
                                 </div>
                                 <span
-                                    v-if="client.image == null"
+                                    v-if="
+                                        client.image == null &&
+                                        client.preview != 'loading'
+                                    "
                                     class="material-symbols-outlined"
                                     @click="
                                         open_browser(
@@ -362,7 +365,7 @@
                                 >
                                     <td>
                                         <img
-                                            v-if="c.image != null"
+                                            v-if="c.image != null && !c.updated"
                                             :src="
                                                 axios.defaults.baseURL + c.image
                                             "
@@ -455,6 +458,7 @@ export default {
                 password_confirmation: "",
                 image: null,
                 preview: null,
+                updated: false, //backend action
             },
             client_copy: {},
             modal: null,
@@ -593,7 +597,7 @@ export default {
         cancel_form() {
             Object.assign(this.client, this.client_copy);
             this.loading_image = false;
-            this.image_updated = false;
+            this.client.updated = false;
         },
 
         open_browser(client, input_name) {
@@ -603,17 +607,27 @@ export default {
         },
         show_image(e) {
             try {
-                this.client.image = e.target.files[0];
-                console.log(e.target.files[0]);
-                const image = URL.createObjectURL(e.target.files[0]);
-                this.client.preview = image;
+                if (e.target.files[0]) {
+                    this.client.image = e.target.files[0];
+                    console.log(e.target.files[0]);
+                    const image = URL.createObjectURL(e.target.files[0]);
+                    this.client.preview = image;
+                    this.client.updated = true;
+                } else {
+                    console.log("oye no seleccionaste nada imbecil!!");
+                    this.client.image = this.client_copy.image;
+                    this.cliente.preview = this.client_copy.preview;
+                    this.client.updated = false;
+                }
             } catch (e) {
                 this.client.image = this.client_copy.image;
-                this.cliente.preview = this.cliente.image;
+                this.client.preview = this.client_copy.preview;
+                this.client.updated = false;
             }
         },
         clear_image(input_name) {
             this.client.image = null;
+            this.client.preview = null;
             document.getElementById(input_name).value = null; //clear input file
         },
     },
