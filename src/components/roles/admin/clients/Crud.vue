@@ -176,10 +176,7 @@
                                 />
                                 <div
                                     class="preview"
-                                    v-if="
-                                        client.preview != null &&
-                                        client.preview != 'loading'
-                                    "
+                                    v-if="client.image && !loading"
                                 >
                                     <span
                                         class="material-symbols-outlined clear-image"
@@ -191,43 +188,27 @@
                                     </span>
                                     <img
                                         @click="
-                                            open_browser(
-                                                client,
-                                                'edit-client-input'
-                                            )
+                                            open_browser('edit-client-input')
                                         "
-                                        :src="client.preview"
+                                        :src="client.image"
                                     />
                                 </div>
                                 <span
-                                    v-if="
-                                        client.image == null &&
-                                        client.preview != 'loading'
-                                    "
+                                    v-if="!client.image && !loading"
                                     class="material-symbols-outlined"
-                                    @click="
-                                        open_browser(
-                                            client,
-                                            'edit-client-input'
-                                        )
-                                    "
+                                    @click="open_browser('edit-client-input')"
                                 >
                                     account_circle
                                 </span>
                                 <!-- <div v-if="loading_image" class="loading"></div> -->
                                 <div
-                                    v-if="client.preview == 'loading'"
+                                    v-if="loading"
                                     class="loading"
-                                    @click="
-                                        open_browser(
-                                            client,
-                                            'edit-client-input'
-                                        )
-                                    "
+                                    @click="open_browser('edit-client-input')"
                                 ></div>
-                                <span class="image_text"
-                                    >Your profile photo</span
-                                >
+                                <span class="image_text">{{
+                                    client.title
+                                }}</span>
                             </div>
                             <div class="form-text" v-if="errors.image">
                                 {{ errors.image[0] }}
@@ -365,15 +346,13 @@
                                 >
                                     <td>
                                         <img
-                                            v-if="c.image != null && !c.updated"
-                                            :src="
-                                                axios.defaults.baseURL + c.image
-                                            "
+                                            v-if="c.image"
+                                            :src="c.image"
                                             class="image-profile"
                                         />
 
                                         <span
-                                            v-if="c.image == null"
+                                            v-if="!c.image"
                                             class="material-symbols-outlined default-profile"
                                         >
                                             account_circle
@@ -457,9 +436,10 @@ export default {
                 password: "",
                 password_confirmation: "",
                 image: null,
-                preview: null,
                 updated: false, //backend action
+                title: "",
             },
+            loading: false,
             client_copy: {},
             modal: null,
             toast: null,
@@ -529,26 +509,23 @@ export default {
 
         edit(c) {
             this.client = c;
-            this.client.preview = this.client.image
-                ? this.axios.defaults.baseURL + this.client.image
-                : null;
+            this.client.title = "Your profile photo";
             this.client_copy = Object.assign({}, this.client);
         },
 
         async update() {
             this.prepare_elements("editUserModal");
             console.log(this.client);
+
             //Verify image
-            //if (this.client.image)
             try {
                 const id = this.client.id;
-                const res = await this.axios.post(
-                    `/api/clients/update/${id}`,
+                const res = await this.axios.put(
+                    `/api/clients/${id}`,
                     this.client,
                     {
                         headers: {
                             Authorization: "Bearer " + localStorage.token,
-                            "Content-Type": "multipart/form-data", //Permite enviar imágenes
                         },
                     }
                 );
@@ -591,7 +568,6 @@ export default {
                 password: "",
                 password_confirmation: "",
                 image: null,
-                preview: null,
             };
         },
         cancel_form() {
@@ -600,30 +576,33 @@ export default {
             this.client.updated = false;
         },
 
-        open_browser(client, input_name) {
+        open_browser(input_name) {
             const input = document.getElementById(input_name);
             input.click();
-            client.preview = "loading";
+            this.loading = true;
         },
-        show_image(e) {
-            try {
-                if (e.target.files[0]) {
-                    this.client.image = e.target.files[0];
-                    console.log(e.target.files[0]);
-                    const image = URL.createObjectURL(e.target.files[0]);
-                    this.client.preview = image;
+
+        //Image managment
+        async show_image(e) {
+            let file = e.target.files[0];
+            if (file) {
+                try {
+                    this.client.image = await this.imageToBase64(file);
                     this.client.updated = true;
-                } else {
-                    console.log("oye no seleccionaste nada imbecil!!");
-                    this.client.image = this.client_copy.image;
-                    this.cliente.preview = this.client_copy.preview;
-                    this.client.updated = false;
+                    this.loading = false;
+                } catch (e) {
+                    this.title = "Ha ocurrido un error al cargar la imagen.";
+                    this.loading = false;
                 }
-            } catch (e) {
-                this.client.image = this.client_copy.image;
-                this.client.preview = this.client_copy.preview;
-                this.client.updated = false;
             }
+        },
+        imageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsDataURL(file);
+            });
         },
         clear_image(input_name) {
             this.client.image = null;
