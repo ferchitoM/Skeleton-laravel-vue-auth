@@ -45,6 +45,7 @@
                         ></button>
                     </div>
                     <div class="modal-body">
+                        <!-- Image management -->
                         <section class="photo-container">
                             <div class="photo-prev">
                                 <input
@@ -53,7 +54,11 @@
                                     @change="show_image"
                                     style="display: none"
                                 />
-                                <div class="preview" v-if="client.preview">
+                                <!-- Image client exist and is not loading a new image -->
+                                <div
+                                    class="preview"
+                                    v-if="client.url && !loading"
+                                >
                                     <span
                                         class="material-symbols-outlined clear-image"
                                         @click="clear_image('new-client-input')"
@@ -64,19 +69,42 @@
                                         @click="
                                             open_browser('new-client-input')
                                         "
-                                        :src="client.preview"
+                                        :src="client.url"
                                     />
                                 </div>
+                                <!-- Image client not exist and is not loading a new image -->
                                 <span
-                                    v-if="!client.preview"
+                                    v-if="!client.url && !loading"
                                     class="material-symbols-outlined"
                                     @click="open_browser('new-client-input')"
                                 >
                                     account_circle
                                 </span>
-                                <span>Your profile photo</span>
+
+                                <div
+                                    v-if="loading"
+                                    class="loading"
+                                    @click="open_browser('new-client-input')"
+                                ></div>
+                                <!-- User can stop the image loading -->
+                                <span
+                                    v-if="loading"
+                                    class="image_text"
+                                    :class="{ stop: loading }"
+                                    @click="stop_loading()"
+                                    @mouseover="image_text = 'Stop loading!'"
+                                    @mouseleave="image_text = 'Loading...'"
+                                    >{{ image_text }}</span
+                                >
+                                <span v-if="!loading" class="image_text"
+                                    >Your profile photo</span
+                                >
+                            </div>
+                            <div class="form-text" v-if="errors.image">
+                                {{ errors.image[0] }}
                             </div>
                         </section>
+                        <!-- Image management -->
                         <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -166,6 +194,7 @@
                     </div>
 
                     <div class="modal-body">
+                        <!-- Image management -->
                         <section class="photo-container">
                             <div class="photo-prev">
                                 <input
@@ -174,12 +203,11 @@
                                     @change="show_image"
                                     style="display: none"
                                 />
+
+                                <!-- Image client exist and is not loading a new image -->
                                 <div
                                     class="preview"
-                                    v-if="
-                                        client.preview != null &&
-                                        client.preview != 'loading'
-                                    "
+                                    v-if="client.url && !loading"
                                 >
                                     <span
                                         class="material-symbols-outlined clear-image"
@@ -191,41 +219,35 @@
                                     </span>
                                     <img
                                         @click="
-                                            open_browser(
-                                                client,
-                                                'edit-client-input'
-                                            )
+                                            open_browser('edit-client-input')
                                         "
-                                        :src="client.preview"
+                                        :src="client.url"
                                     />
                                 </div>
+                                <!-- Image client not exist and is not loading a new image -->
                                 <span
-                                    v-if="
-                                        client.image == null &&
-                                        client.preview != 'loading'
-                                    "
+                                    v-if="!client.url && !loading"
                                     class="material-symbols-outlined"
-                                    @click="
-                                        open_browser(
-                                            client,
-                                            'edit-client-input'
-                                        )
-                                    "
+                                    @click="open_browser('edit-client-input')"
                                 >
                                     account_circle
                                 </span>
-                                <!-- <div v-if="loading_image" class="loading"></div> -->
                                 <div
-                                    v-if="client.preview == 'loading'"
+                                    v-if="loading"
                                     class="loading"
-                                    @click="
-                                        open_browser(
-                                            client,
-                                            'edit-client-input'
-                                        )
-                                    "
+                                    @click="open_browser('edit-client-input')"
                                 ></div>
-                                <span class="image_text"
+                                <!-- User can stop the image loading -->
+                                <span
+                                    v-if="loading"
+                                    class="image_text"
+                                    :class="{ stop: loading }"
+                                    @click="stop_loading()"
+                                    @mouseover="image_text = 'Stop loading!'"
+                                    @mouseleave="image_text = 'Loading...'"
+                                    >{{ image_text }}</span
+                                >
+                                <span v-if="!loading" class="image_text"
                                     >Your profile photo</span
                                 >
                             </div>
@@ -233,6 +255,8 @@
                                 {{ errors.image[0] }}
                             </div>
                         </section>
+                        <!-- Image management -->
+
                         <form>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -294,11 +318,26 @@
                         ></button>
                     </div>
                     <div class="modal-body">
-                        <p>¿Deseas eliminar al cliente:</p>
-                        <p class="delete">
-                            {{ client.name }} <br />
-                            {{ client.email }}?
-                        </p>
+                        <h6>
+                            <p>¿Deseas eliminar a este cliente?:</p>
+                        </h6>
+                        <!-- Image management -->
+                        <section class="photo-container delete">
+                            <div class="photo-prev">
+                                <div v-if="client.url" class="preview">
+                                    <img :src="client.url" />
+                                </div>
+                                <span
+                                    v-if="!client.url"
+                                    class="material-symbols-outlined"
+                                >
+                                    account_circle
+                                </span>
+                            </div>
+                        </section>
+                        <!-- Image management -->
+
+                        <p class="delete">{{ client.name }}</p>
                     </div>
                     <div class="modal-footer">
                         <button
@@ -314,15 +353,73 @@
         </div>
         <!-- Delete User Modal End -->
 
+        <!-- Restore User Modal Start -->
+        <div
+            class="modal fade"
+            id="restoreUserModal"
+            tabindex="-1"
+            data-bs-backdrop="static"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Restore Client
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            @click="reset_form"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>
+                            <p>¿Deseas restablecer a este cliente?:</p>
+                        </h6>
+                        <!-- Image management -->
+                        <section class="photo-container delete">
+                            <div class="photo-prev">
+                                <div v-if="client.url" class="preview">
+                                    <img
+                                        :src="client.url"
+                                        class="soft-delete"
+                                    />
+                                </div>
+                                <span
+                                    v-if="!client.url"
+                                    class="material-symbols-outlined soft-delete"
+                                >
+                                    account_circle
+                                </span>
+                            </div>
+                        </section>
+                        <!-- Image management -->
+
+                        <p class="delete soft-delete">{{ client.name }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="restore"
+                        >
+                            Restore Client
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Restore User Modal End -->
+
         <div class="container">
             <div class="row mt-4">
                 <div
                     class="col-lg-12 d-flex justify-content-between align-items-center"
                 >
                     <div>
-                        <h4 class="text-primary">
-                            All clients in the database!
-                        </h4>
+                        <h4 class="text-primary">Active client list</h4>
                     </div>
                     <div>
                         <button
@@ -364,16 +461,24 @@
                                     :key="'client' + c.id"
                                 >
                                     <td>
+                                        <!-- Image client exist and is not loading a new image -->
                                         <img
-                                            v-if="c.image != null && !c.updated"
+                                            v-if="c.image && !c.url"
                                             :src="
                                                 axios.defaults.baseURL + c.image
                                             "
                                             class="image-profile"
                                         />
+                                        <!-- Image client exist and uploaded a new image -->
+                                        <img
+                                            v-if="c.url && !loading"
+                                            :src="c.url"
+                                            class="image-profile"
+                                        />
 
+                                        <!-- Image client not exist and is not loading a new image -->
                                         <span
-                                            v-if="c.image == null"
+                                            v-if="!c.image && !loading"
                                             class="material-symbols-outlined default-profile"
                                         >
                                             account_circle
@@ -393,6 +498,7 @@
                                         </span>
 
                                         <span
+                                            @click="edit(c)"
                                             class="material-symbols-outlined"
                                             data-bs-toggle="modal"
                                             data-bs-target="#deleteUserModal"
@@ -414,6 +520,89 @@
                 </div>
             </div>
         </div>
+
+        <!-- Deleted clients -->
+        <div class="container">
+            <div class="row mt-4">
+                <div
+                    class="col-lg-12 d-flex justify-content-between align-items-center"
+                >
+                    <div>
+                        <h4 class="text-primary">Soft-deleted client list</h4>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="showAlert"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table
+                            class="table table-striped table-bordered text-center"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Profile</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="c in client_list_deleted"
+                                    :key="'client_d' + c.id"
+                                >
+                                    <td>
+                                        <!-- Image client exist and is not loading a new image -->
+                                        <img
+                                            v-if="c.image"
+                                            :src="
+                                                axios.defaults.baseURL + c.image
+                                            "
+                                            class="image-profile soft-delete"
+                                        />
+
+                                        <!-- Image client not exist and is not loading a new image -->
+                                        <span
+                                            v-if="!c.image"
+                                            class="material-symbols-outlined default-profile soft-delete"
+                                        >
+                                            account_circle
+                                        </span>
+                                    </td>
+                                    <td class="soft-delete">{{ c.name }}</td>
+                                    <td class="soft-delete">{{ c.email }}</td>
+                                    <td class="soft-delete">{{ c.role }}</td>
+                                    <td class="icons">
+                                        <span
+                                            @click="edit(c)"
+                                            class="material-symbols-outlined"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#restoreUserModal"
+                                        >
+                                            restore_from_trash
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div
+                            class="alert alert-danger text-center"
+                            role="alert"
+                            v-if="hay_clientes_eliminados == 0"
+                        >
+                            No tienes clientes eliminados en tu base de datos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -422,7 +611,7 @@
     cursor: pointer;
 }
 .delete {
-    padding: 0 1rem 0 1rem;
+    text-align: center;
 }
 .toast-container {
     position: relative;
@@ -447,7 +636,9 @@ export default {
     data() {
         return {
             client_list: [],
+            client_list_deleted: [],
             hay_clientes: 0,
+            hay_clientes_eliminados: 0,
             alert: "",
             client: {
                 id: null,
@@ -457,9 +648,12 @@ export default {
                 password: "",
                 password_confirmation: "",
                 image: null,
+                url: null,
                 preview: null,
-                updated: false, //backend action
+                updated: null, //backend action
             },
+            loading: false,
+            image_text: "Loading image...",
             client_copy: {},
             modal: null,
             toast: null,
@@ -492,6 +686,8 @@ export default {
                             "Tu sessión ha expirado, por favor intentalo de nuevo",
                     },
                 });
+                this.modal.hide();
+                this.toast.show();
             }
         },
 
@@ -501,7 +697,10 @@ export default {
                     headers: { Authorization: "Bearer " + localStorage.token },
                 });
                 this.client_list = res.data.client_list;
+                this.client_list_deleted = res.data.client_list_deleted;
+
                 this.hay_clientes = this.client_list.length;
+                this.hay_clientes_eliminados = this.client_list_deleted.length;
             } catch (e) {
                 this.manage_error_messages(e);
             }
@@ -519,6 +718,7 @@ export default {
                 this.getClients();
                 this.reset_form();
                 this.alert = res.data.message;
+                this.clear_image("new-client-input");
 
                 this.modal.hide();
                 this.toast.show();
@@ -529,17 +729,19 @@ export default {
 
         edit(c) {
             this.client = c;
-            this.client.preview = this.client.image
+            this.client.preview = false;
+            this.client.updated = null;
+            this.client.url = this.client.image
                 ? this.axios.defaults.baseURL + this.client.image
                 : null;
             this.client_copy = Object.assign({}, this.client);
+
+            this.image_text = "You profile photo";
+            this.loading = false;
         },
 
         async update() {
             this.prepare_elements("editUserModal");
-            console.log(this.client);
-            //Verify image
-            //if (this.client.image)
             try {
                 const id = this.client.id;
                 const res = await this.axios.post(
@@ -554,6 +756,7 @@ export default {
                 );
                 this.getClients();
                 this.alert = res.data.message;
+                this.clear_image("edit-client-input");
 
                 this.modal.hide();
                 this.toast.show();
@@ -581,6 +784,28 @@ export default {
                 this.manage_error_messages(e);
             }
         },
+        async restore() {
+            this.prepare_elements("restoreUserModal");
+
+            try {
+                const id = this.client.id;
+                const res = await this.axios.delete(
+                    `/api/clients/restore/${id}`,
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.token,
+                        },
+                    }
+                );
+                this.getClients();
+                this.alert = res.data.message;
+
+                this.modal.hide();
+                this.toast.show();
+            } catch (e) {
+                this.manage_error_messages(e);
+            }
+        },
 
         reset_form() {
             this.alert = "";
@@ -591,44 +816,51 @@ export default {
                 password: "",
                 password_confirmation: "",
                 image: null,
+                url: null,
                 preview: null,
+                updated: null, //backend action
             };
+            this.errors = {};
+            this.loading = false;
+            this.image_text = "Loading image...";
         },
         cancel_form() {
             Object.assign(this.client, this.client_copy);
-            this.loading_image = false;
-            this.client.updated = false;
+            this.loading = false;
+            this.client.updated = null;
         },
 
-        open_browser(client, input_name) {
+        open_browser(input_name) {
             const input = document.getElementById(input_name);
             input.click();
-            client.preview = "loading";
+            this.loading = true;
+            this.client.updated = null;
+            this.image_text = "Loading...";
         },
         show_image(e) {
-            try {
-                if (e.target.files[0]) {
-                    this.client.image = e.target.files[0];
-                    console.log(e.target.files[0]);
-                    const image = URL.createObjectURL(e.target.files[0]);
-                    this.client.preview = image;
-                    this.client.updated = true;
-                } else {
-                    console.log("oye no seleccionaste nada imbecil!!");
-                    this.client.image = this.client_copy.image;
-                    this.cliente.preview = this.client_copy.preview;
-                    this.client.updated = false;
-                }
-            } catch (e) {
-                this.client.image = this.client_copy.image;
-                this.client.preview = this.client_copy.preview;
-                this.client.updated = false;
+            if (e.target.files[0]) {
+                console.log("updated!");
+                this.client.updated = true;
+
+                this.client.image = e.target.files[0];
+                this.client.url = URL.createObjectURL(e.target.files[0]);
+            } else {
+                console.log("No se seleccionó ninguna imagen!!");
+                this.client.url = this.client_copy.url;
             }
+
+            this.loading = false;
         },
         clear_image(input_name) {
             this.client.image = null;
-            this.client.preview = null;
+            this.client.updated = true;
+            this.client.url = null;
             document.getElementById(input_name).value = null; //clear input file
+        },
+        stop_loading() {
+            console.log("cancelaste la carga!!");
+            this.client.url = this.client_copy.url;
+            this.loading = false;
         },
     },
 };

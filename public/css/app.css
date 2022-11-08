@@ -75,6 +75,19 @@
   background-color: #fff;
 }
 
+.delete {
+  margin-top: -2rem;
+}
+
+img.soft-delete, span.soft-delete, p.soft-delete {
+  filter: grayscale(100%);
+  opacity: 0.5 !important;
+}
+
+td.soft-delete {
+  color: #b4b4b4 !important;
+}
+
 .photo-container {
   display: flex;
   flex-direction: column;
@@ -148,6 +161,12 @@
 .photo-container .photo-prev .image_text {
   position: absolute;
   bottom: 0;
+}
+.photo-container .photo-prev .stop {
+  cursor: pointer;
+}
+.photo-container .photo-prev .stop:hover {
+  color: #0d6efd;
 }
 .photo-container .photo-prev .loading {
   position: absolute;

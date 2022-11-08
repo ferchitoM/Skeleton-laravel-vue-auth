@@ -66,6 +66,16 @@
 .table
     background-color: #fff
 
+.delete
+    margin-top: -2rem
+img, span, p
+    &.soft-delete
+        filter: grayscale(100%)
+        opacity: 0.5 !important
+td
+    &.soft-delete
+        color: #b4b4b4 !important
+
 .photo-container
     display: flex
     flex-direction: column
@@ -113,7 +123,6 @@
                 transition: none
                 &:hover
                     transform: none
-
         span
             padding-top: 0.5rem
             text-align: center
@@ -130,6 +139,12 @@
         .image_text
             position: absolute
             bottom: 0
+
+        .stop
+            cursor: pointer
+            &:hover
+                color: #0d6efd
+
         .loading
             position: absolute
             border: 12px solid #f3f3f3
