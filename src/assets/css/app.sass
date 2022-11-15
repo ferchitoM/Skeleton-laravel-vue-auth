@@ -156,8 +156,22 @@ td
             animation: spin 0.5s linear infinite
             cursor: pointer
 
+.flash-icon
+    animation: flash 500ms ease-in
+    //filter: brightness(3)
+
 @keyframes spin
     0%
         transform: rotate(0deg)
     100%
         transform: rotate(360deg)
+
+@keyframes flash
+    0%
+        opacity: 0
+        transform: scale(0.5)
+    50%
+        transform: scale(1.2)
+    100%
+        opacity: 1
+        transform: scale(1)

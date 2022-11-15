@@ -181,6 +181,11 @@ td.soft-delete {
   cursor: pointer;
 }
 
+.flash-icon {
+  -webkit-animation: flash 500ms ease-in;
+          animation: flash 500ms ease-in;
+}
+
 @-webkit-keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -196,5 +201,31 @@ td.soft-delete {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }/*# sourceMappingURL=app.css.map */

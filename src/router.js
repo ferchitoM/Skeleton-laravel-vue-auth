@@ -21,6 +21,8 @@ import UserChangePassword from "./components/roles/user/ChangePassword.vue";
 import UserAccount from "./components/roles/user/Account.vue";
 import UserProfile from "./components/roles/user/Profile.vue";
 import UserTest from "./components/roles/user/Test.vue";
+//SHOPPING CART
+import Shopping from "./components/roles/user/shopping/Shopping.vue";
 
 //ADMIN COMPONENTS
 import AdminAside from "./components/roles/admin/Aside.vue";
@@ -30,140 +32,144 @@ import AdminChangePassword from "./components/roles/admin/ChangePassword.vue";
 import AdminAccount from "./components/roles/admin/Account.vue";
 import AdminProfile from "./components/roles/admin/Profile.vue";
 import AdminTest from "./components/roles/admin/Test.vue";
-//PRODUCTS
+//CLIENTS
 import ClientsCrud from "./components/roles/admin/clients/Crud.vue";
 
 const routes = [
-    //AUTH ROUTES
-    {
-        path: "/",
-        name: "Home",
-        components: {
-            NavBar: NavBar,
-            default: Home,
-        },
-    },
-    {
-        path: "/login",
-        name: "Login",
-        components: {
-            NavBar: NavBar,
-            default: Login,
-            Aside: Empty,
-        },
-    },
-    {
-        path: "/register",
-        name: "Register",
-        components: {
-            NavBar: NavBar,
-            default: Register,
-        },
-    },
-    {
-        path: "/forgot-password",
-        name: "ForgotPassword",
-        components: {
-            default: ForgotPassword,
-            NavBar: UserNavBar,
-        },
-    },
-    {
-        path: "/reset-password",
-        name: "ResetPassword",
-        component: ResetPassword,
-    },
-    {
-        path: "/send-email",
-        name: "SendEmail",
-        components: {
-            default: SendEmail,
-            NavBar: UserNavBar,
-        },
-    },
-    {
-        path: "/verify-email",
-        name: "VerifyEmail",
-        components: {
-            default: VerifyEmail,
-            NavBar: UserNavBar,
-        },
-    },
+   //AUTH ROUTES
+   {
+      path: "/",
+      name: "Home",
+      components: {
+         NavBar: NavBar,
+         default: Home,
+      },
+   },
+   {
+      path: "/login",
+      name: "Login",
+      components: {
+         NavBar: NavBar,
+         default: Login,
+         Aside: Empty,
+      },
+   },
+   {
+      path: "/register",
+      name: "Register",
+      components: {
+         NavBar: NavBar,
+         default: Register,
+      },
+   },
+   {
+      path: "/forgot-password",
+      name: "ForgotPassword",
+      components: {
+         default: ForgotPassword,
+         NavBar: UserNavBar,
+      },
+   },
+   {
+      path: "/reset-password",
+      name: "ResetPassword",
+      component: ResetPassword,
+   },
+   {
+      path: "/send-email",
+      name: "SendEmail",
+      components: {
+         default: SendEmail,
+         NavBar: UserNavBar,
+      },
+   },
+   {
+      path: "/verify-email",
+      name: "VerifyEmail",
+      components: {
+         default: VerifyEmail,
+         NavBar: UserNavBar,
+      },
+   },
 
-    //USER ROUTES
-    {
-        path: "/user",
-        redirect: "/login",
-    },
-    {
-        path: "/user/account",
-        name: "UserAccount",
-        components: {
-            default: UserAccount,
-            Aside: UserAside,
-            NavBar: UserNavBar,
-        },
-        children: [
-            {
-                path: "profile",
-                component: UserProfile,
-            },
-            {
-                path: "edit-profile",
-                component: UserEditProfile,
-            },
-            {
-                path: "change-password",
-                component: UserChangePassword,
-            },
-            {
-                path: "test",
-                component: UserTest,
-            },
-        ],
-    },
+   //USER ROUTES
+   {
+      path: "/user",
+      redirect: "/login",
+   },
+   {
+      path: "/user/account",
+      name: "UserAccount",
+      components: {
+         default: UserAccount,
+         Aside: UserAside,
+         NavBar: UserNavBar,
+      },
+      children: [
+         {
+            path: "profile",
+            component: UserProfile,
+         },
+         {
+            path: "edit-profile",
+            component: UserEditProfile,
+         },
+         {
+            path: "change-password",
+            component: UserChangePassword,
+         },
+         {
+            path: "test",
+            component: UserTest,
+         },
+         {
+            path: "shopping",
+            component: Shopping,
+         },
+      ],
+   },
 
-    //ADMIN ROUTES
-    {
-        path: "/admin",
-        redirect: "/login",
-    },
-    {
-        path: "/admin/account",
-        name: "AdminAccount",
-        components: {
-            default: AdminAccount,
-            Aside: AdminAside,
-            NavBar: AdminNavBar,
-        },
-        children: [
-            {
-                path: "profile",
-                component: AdminProfile,
-            },
-            {
-                path: "edit-profile",
-                component: AdminEditProfile,
-            },
-            {
-                path: "change-password",
-                component: AdminChangePassword,
-            },
-            {
-                path: "test",
-                component: AdminTest,
-            },
-            {
-                path: "clients",
-                component: ClientsCrud,
-            },
-        ],
-    },
+   //ADMIN ROUTES
+   {
+      path: "/admin",
+      redirect: "/login",
+   },
+   {
+      path: "/admin/account",
+      name: "AdminAccount",
+      components: {
+         default: AdminAccount,
+         Aside: AdminAside,
+         NavBar: AdminNavBar,
+      },
+      children: [
+         {
+            path: "profile",
+            component: AdminProfile,
+         },
+         {
+            path: "edit-profile",
+            component: AdminEditProfile,
+         },
+         {
+            path: "change-password",
+            component: AdminChangePassword,
+         },
+         {
+            path: "test",
+            component: AdminTest,
+         },
+         {
+            path: "clients",
+            component: ClientsCrud,
+         },
+      ],
+   },
 ];
 
 const _router = createRouter({
-    history: createWebHistory(),
-    routes,
+   history: createWebHistory(),
+   routes,
 });
 
 export default _router;
