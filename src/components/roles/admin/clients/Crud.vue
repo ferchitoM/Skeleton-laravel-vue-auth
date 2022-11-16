@@ -644,12 +644,6 @@ export default {
 
       this.getClients();
       console.log(localStorage.token);
-
-      //Launch database changes verification
-      clearInterval(this.timer);
-      this.timer = setInterval(() => {
-         this.db_changes();
-      }, 10000);
    },
 
    methods: {
