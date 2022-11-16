@@ -137,6 +137,14 @@ main section.container-prod section.cart {
   font-weight: bold;
 }
 
+.agotado {
+  width: 10rem;
+  height: 10rem;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+
 .img-prod {
   width: 12.4rem;
   height: 12.5rem;
@@ -233,54 +241,6 @@ main section.container-prod section.cart {
   font-weight: 500;
 }
 
-.botones-cantidad {
-  display: flex;
-  justify-content: center;
-}
-.botones-cantidad * {
-  border: 1px solid;
-}
-.botones-cantidad .cantidad {
-  background-color: white;
-  border: 2px solid #44c6b7;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  color: #44c6b7;
-  font-weight: 500;
-  text-align: center;
-  padding-top: 3.5px;
-}
-.botones-cantidad .b-mas, .botones-cantidad .b-menos {
-  cursor: pointer;
-  color: #b9b9b9;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 1.5rem;
-  line-height: 1rem;
-}
-
-.eliminar {
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-}
-.eliminar i {
-  margin-top: 10px;
-  padding-top: 3.5px;
-  border: 2px solid #809bb6;
-  border-radius: 5px;
-  height: 31px;
-  width: 25px;
-  color: #809bb6;
-  margin-left: 0.5rem;
-  font-size: 1.3rem;
-  text-align: center;
-  cursor: pointer;
-}
-
 .item-container {
   overflow-y: auto;
   flex: 1 0 0;
@@ -301,27 +261,81 @@ table * {
 table tr {
   display: flex;
   flex: 1 0 0;
-  height: 6rem;
-}
-table tr * {
-  border: 0px solid;
+  height: 4.5rem;
+  margin-bottom: 2rem;
 }
 table tr .item-prod {
   flex: 1.5 0 0;
   display: flex;
   flex-direction: column;
   line-height: 1.2rem;
+  justify-content: space-between;
 }
-table tr .item-prod .precio {
+table tr .item-prod .grupo {
+  display: flex;
+  gap: 1rem;
+}
+table tr .item-prod .grupo .precio {
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
 }
+table tr .item-prod .grupo .eliminar {
+  flex: 0 0 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+table tr .item-prod .grupo .eliminar i {
+  line-height: 1.5rem;
+  border: 2px solid #44c6b7;
+  border-radius: 5px;
+  height: 1.8rem;
+  width: 1.55rem;
+  color: #44c6b7;
+  font-size: 1.3rem;
+}
+table tr .item-prod .grupo .eliminar i:hover {
+  border: 2px solid #00e9ce;
+  color: #00e9ce;
+}
 table tr .botones-cantidad {
   flex: 0 0 3rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
+}
+table tr .botones-cantidad .cantidad {
+  margin: 2px;
+  padding: 0;
+  background-color: white;
+  border: 2px solid #44c6b7;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 25%;
+  color: #44c6b7;
+  font-weight: 500;
+  text-align: center;
+}
+table tr .botones-cantidad .b-mas, table tr .botones-cantidad .b-menos {
+  margin: 2px;
+  padding: 0;
+  cursor: pointer;
+  color: #b9b9b9;
+  width: 1.3rem;
+  height: 1.2rem;
+  border-radius: 25%;
+  text-align: center;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+table tr .botones-cantidad .b-mas span, table tr .botones-cantidad .b-menos span {
+  font-size: 1.2rem;
+  line-height: 1.2rem;
 }
 table tr .totales {
   flex: 1 0 0;
@@ -329,6 +343,7 @@ table tr .totales {
   justify-items: center;
   flex-direction: column;
   text-align: right;
+  justify-content: space-between;
 }
 table tr .totales .iva, table tr .totales .subtotal {
   font-size: 0.8rem;
@@ -340,12 +355,7 @@ table tr .titulos {
   flex: 0 0 2.5rem;
   display: flex;
   flex-direction: column;
-}
-table tr .eliminar {
-  flex: 0 0 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .titulo-factura {
@@ -382,6 +392,9 @@ table tr .eliminar {
   display: flex;
   flex: 1 0 0;
   justify-content: space-between;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #7a7a7a;
 }
 
 .cliente {
@@ -418,6 +431,10 @@ table tr .eliminar {
   text-align: center;
   margin: 1rem 10px 1rem 10px !important;
   padding: 1rem;
+  cursor: pointer;
+}
+.pie .vender:hover {
+  background-color: #00d2b9;
 }
 .pie .cantidad {
   background-color: #809bb6;
@@ -426,4 +443,29 @@ table tr .eliminar {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
+}
+.pie .cantidad .cancelar {
+  cursor: pointer;
+}
+
+.producto-agotado {
+  position: relative;
+}
+.producto-agotado * {
+  color: #c8c8c8 !important;
+  border-color: #c8c8c8 !important;
+  cursor: default !important;
+}
+.producto-agotado .eliminar i:hover {
+  border: 2px solid #44c6b7 !important;
+  color: #44c6b7 !important;
+  cursor: pointer !important;
+}
+.producto-agotado img {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  top: 0;
+  right: 0 !important;
+  transform: rotate(90deg);
 }/*# sourceMappingURL=shopping.css.map */

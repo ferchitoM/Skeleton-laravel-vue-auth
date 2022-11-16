@@ -29,6 +29,7 @@
          id="addNewUserModal"
          tabindex="-1"
          data-bs-backdrop="static"
+         data-bs-keyboard="false"
       >
          <div class="modal-dialog">
             <div class="modal-content">
@@ -166,6 +167,7 @@
          id="editUserModal"
          tabindex="-1"
          data-bs-backdrop="static"
+         data-bs-keyboard="false"
       >
          <div class="modal-dialog">
             <div class="modal-content">
@@ -280,6 +282,7 @@
          id="deleteUserModal"
          tabindex="-1"
          data-bs-backdrop="static"
+         data-bs-keyboard="false"
       >
          <div class="modal-dialog">
             <div class="modal-content">
@@ -337,6 +340,7 @@
          id="restoreUserModal"
          tabindex="-1"
          data-bs-backdrop="static"
+         data-bs-keyboard="false"
       >
          <div class="modal-dialog">
             <div class="modal-content">
@@ -629,6 +633,15 @@ export default {
       };
    },
    mounted() {
+      if (!localStorage.token) {
+         this.$router.push({
+            name: "Login",
+            params: {
+               message: "No estas autorizado para acceder a esta cuenta",
+            },
+         });
+      }
+
       this.getClients();
       console.log(localStorage.token);
 
@@ -774,43 +787,6 @@ export default {
 
             this.modal.hide();
             this.toast.show();
-         } catch (e) {
-            this.manage_error_messages(e);
-         }
-      },
-
-      //View database changes and update the clients
-      async db_changes() {
-         console.log("updating list...");
-         try {
-            const res = await this.axios.get("/api/clients", {
-               headers: { Authorization: "Bearer " + localStorage.token },
-            });
-
-            let updated_list = res.data.client_list;
-            let client = null;
-
-            //Comparte the client list with update list
-            updated_list.forEach((client_updated) => {
-               client = this.client_list.find(
-                  (item) => item.id == client_updated.id
-               );
-
-               if (client) {
-                  //If client name changes then update table
-                  if (client.name != client_updated.name) {
-                     client.name = client_updated.name;
-
-                     //Add css class to show the change in table
-                     let div = document.getElementById("client" + client.id);
-                     div.classList.remove("flash-icon");
-                     div.classList.add("flash-icon");
-
-                     console.log("cliente changed: " + client.name);
-                  }
-               }
-               client = null;
-            });
          } catch (e) {
             this.manage_error_messages(e);
          }

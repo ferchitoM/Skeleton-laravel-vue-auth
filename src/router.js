@@ -23,6 +23,7 @@ import UserProfile from "./components/roles/user/Profile.vue";
 import UserTest from "./components/roles/user/Test.vue";
 //SHOPPING CART
 import Shopping from "./components/roles/user/shopping/Shopping.vue";
+import MySales from "./components/roles/user/MySales.vue";
 
 //ADMIN COMPONENTS
 import AdminAside from "./components/roles/admin/Aside.vue";
@@ -125,6 +126,11 @@ const routes = [
          {
             path: "shopping",
             component: Shopping,
+         },
+         {
+            path: "mysales",
+            name: "mysales",
+            component: MySales,
          },
       ],
    },
